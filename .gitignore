@@ -1,0 +1,17 @@
+.dub/
+docs/
+out/
+build/
+
+docs.json
+__dummy.html
+jss-deref.so
+jss-deref.dylib
+jss-deref.dll
+jss-deref.a
+jss-deref.lib
+jss-deref-test-*
+*.exe
+*.o
+*.obj
+*.lst

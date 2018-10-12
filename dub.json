@@ -1,0 +1,8 @@
+{
+	"name": "js-deref",
+	"authors": [
+		"Elizabeth Harper"
+	],
+	"description": "JSON Schema Reference Resolver",
+	"license": "MIT"
+}

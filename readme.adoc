@@ -1,0 +1,14 @@
+= JSON Schema Reference Resolver
+
+Recursively resolves `"$ref"`s and appends the external
+schema content to the `"definitions"` object.
+
+Reads entire directory trees and copies the input files to
+the output location.
+
+== Usage
+
+[source, bash session]
+----
+$ js-deref <input_dir> <output_dir>
+----
