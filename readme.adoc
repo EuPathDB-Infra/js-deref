@@ -1,7 +1,9 @@
 = JSON Schema Reference Resolver
 
-Recursively resolves `"$ref"`s and appends the external
-schema content to the `"definitions"` object.
+image:https://travis-ci.org/EuPathDB-Infra/js-deref.svg?branch=master[]
+
+Recursively resolves `"$ref"` properties and appends the
+external schema content to the root `"definitions"` object.
 
 Reads entire directory trees and copies the input files to
 the output location.
