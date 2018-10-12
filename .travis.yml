@@ -13,7 +13,8 @@ deploy:
   provider: releases
   api_key:
     secure: lVDHWjX5dkTeEwnV3dNZ82H2xBApGPmZwtmHAKDY2+MJfaJoNzA57iqKB89oPl4T8GT3eE7IGRlaPVTrlLKowqa6tGbjaYHdfCHhgCRHszonQaGZxUeGgwI9NjLUd4GYlqLKGtMjsqmKa+E7KWa7nq6Xchuah3yO48jJigXhalNxiNN1xCT+ADX37n1J1n/c2osofG9Pm68CdQG/3IReQDdXMgiHuue7pONBQ1mjEB30UExUK5KZnTffN+BBshdx/dqb0VIQO4+Ql9TVNsqU9NJj5XkIalX0KFKcDj6cvg9fF7+3nK5dvCYhO++IfRo1uz/ihvwekzlP2dyqk4Tdda+7FZV5Wxq2Y4wWfteVAfY9SIdH/Nq/wYn8M1irQHscumzqSOrkIYeUvwYDPUMROdVQ3qr1+jwp2U5QkTAmPVA7T5+eHya1HJbvp/1w3Di4Q3b3fYrWhc6iDIfkOi5kPptMYBm02bRC0CgFsVorDSM8fUH3kE4ELqQQ7CbUxmcAdHt1napjRk9r+jAJgcCx8ouGmI44JFiKbzxeLPk396BGXyRym/OxrVtr86QdGxfQRRYJyCwhbgJ7o7HwtDoGS3JXnwCvtMhdL92a0fsljHQY/KF99ZdgJoE/iAu+Ug6R9MhTbBY7ol6txoDKTIZ+r2qMOcQzl2wAUO0e3oVW5Lo=
+  skip_cleanup: true
   file: js-deref
   on:
     tags: true
-    #repo: EuPathDB-Infra/js-deref
+    repo: EuPathDB-Infra/js-deref
