@@ -1,6 +1,8 @@
 = JSON Schema Reference Resolver
 
-image:https://travis-ci.org/EuPathDB-Infra/js-deref.svg?branch=master[]
+image:https://img.shields.io/github/release/EuPathDB-Infra/js-deref.svg?style=flat-square[GitHub tag]
+image:https://img.shields.io/travis/EuPathDB-Infra/js-deref/master.svg?style=flat-square[Travis (.org) branch]
+
 
 Recursively resolves `"$ref"` properties and appends the
 external schema content to the root `"definitions"` object.
