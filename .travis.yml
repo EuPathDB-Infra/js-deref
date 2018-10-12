@@ -6,7 +6,7 @@ os:
 d:
 - dmd-2.082.0
 
-after_script:
+before_deploy:
 - dub build --build=release 
 
 deploy:
