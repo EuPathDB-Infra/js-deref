@@ -23,3 +23,15 @@ root of a java project's resource directory.
 ----
 $ js-deref <input_dir> <output_dir>
 ----
+
+== Rule checks
+
+Out of the rules established for the JSON Schema files in
+the WDK, the following are enforced by js-deref:
+
+Out of Scope / Missing:: A JSON Schema file is referenced
+  which is not present in the resources directory.
+
+Absolute Refs:: All references must be "absolute" to the
+  root of the resources directory.  (These paths will become
+  absolute paths in the compiled WDK jar).

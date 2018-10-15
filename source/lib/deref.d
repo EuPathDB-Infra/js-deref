@@ -19,7 +19,7 @@ private const string ERR_ILLEGAL_REF = "References must be absolute paths to "
     Invalid Ref: %s
     Schema File: %s`;
 
-private const string ERR_OUT_OF_SCOPE = "References must be in the resource"
+private const string ERR_OUT_OF_SCOPE = "References not found in the resource "
   ~ `directory.
     Invalid Ref: %s
     Schema File: %s`;
