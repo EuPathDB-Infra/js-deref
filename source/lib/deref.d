@@ -140,7 +140,7 @@ class Dereferencer {
     debug(deref) printDebug(["path": &path, "s": &s]);
 
     if(path[0] != '/')
-      throw new Exception(ERR_ILLEGAL_REF);
+      throw new Exception(format(ERR_ILLEGAL_REF, path, s.getPath()));
 
     return localResolve(path, s);
   }
