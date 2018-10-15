@@ -2,7 +2,7 @@
 :icons: font
 
 
-image:https://img.shields.io/github/release/EuPathDB-Infra/js-deref.svg?style=flat-square[GitHub tag]
+image:https://img.shields.io/github/release/EuPathDB-Infra/js-deref.svg?style=flat-square[GitHub tag,link=https://github.com/EuPathDB-Infra/js-deref/releases/latest]
 image:https://img.shields.io/travis/EuPathDB-Infra/js-deref/master.svg?style=flat-square[Travis (.org) branch,link=https://travis-ci.org/EuPathDB-Infra/js-deref]
 
 
