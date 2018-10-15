@@ -1,7 +1,9 @@
 = JSON Schema Reference Resolver
+:icons: font
+
 
 image:https://img.shields.io/github/release/EuPathDB-Infra/js-deref.svg?style=flat-square[GitHub tag]
-image:https://img.shields.io/travis/EuPathDB-Infra/js-deref/master.svg?style=flat-square[Travis (.org) branch]
+image:https://img.shields.io/travis/EuPathDB-Infra/js-deref/master.svg?style=flat-square[Travis (.org) branch,link=https://travis-ci.org/EuPathDB-Infra/js-deref]
 
 
 Recursively resolves `"$ref"` properties and appends the
@@ -9,6 +11,11 @@ external schema content to the root `"definitions"` object.
 
 Reads entire directory trees and copies the input files to
 the output location.
+
+WARNING: This utility is not presently suited for general
+use as a json schema ref resolver.  It is tailored to the
+specific case of absolute filesystem path references to the
+root of a java project's resource directory.
 
 == Usage
 
