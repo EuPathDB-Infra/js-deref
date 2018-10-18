@@ -1,6 +1,6 @@
 module lib.deref;
 
-import std.stdio: writefln, toFile;
+import std.stdio: writefln, writeln, toFile;
 import std.file: dirEntries, SpanMode, readText, mkdirRecurse;
 import std.path: buildNormalizedPath, dirName, baseName, buildPath;
 import std.json: JSONValue, parseJSON, JSONException, JSONType;
@@ -8,21 +8,12 @@ import std.string: indexOf, split, format;
 
 import lib.schema;
 import lib.json_schema;
+import lib.err;
 debug(deref) import lib.bug.pdb: printDebug;
 
 private const string INCLUDES_DIR = "includes";
 
 private const string SCHEMA_FILTER = "*.json";
-
-private const string ERR_ILLEGAL_REF = "References must be absolute paths to "
-  ~ `the root of the resource directory.  Example '/schema/wdk/...'.
-    Invalid Ref: %s
-    Schema File: %s`;
-
-private const string ERR_OUT_OF_SCOPE = "References not found in the resource "
-  ~ `directory.
-    Invalid Ref: %s
-    Schema File: %s`;
 
 private const string ERR_JSON_PARSE = `Failed to parse JSON file contents.
     Schema File: %s`;
@@ -32,6 +23,8 @@ class Dereferencer {
   private Schema[string] all;
 
   private const string inDir;
+
+  private const bool writeOutput;
 
   private const string outDir;
 
@@ -43,32 +36,70 @@ class Dereferencer {
     debug(deref) printDebug(["inDir": inDir, "outDir": outDir]);
     this.inDir  = inDir;
     this.outDir = outDir;
+    this.writeOutput = true;
+  }
+
+  /**
+   * @param inDir  input schema home
+   * @param outDir schema output directory
+   */
+  this(const string inDir) {
+    debug(deref) printDebug(["inDir": inDir]);
+    this.inDir  = inDir;
+    this.outDir = "";
+    this.writeOutput = false;
   }
 
   /**
    *
    */
-  public void run() {
+  public int run() {
     debug(deref) printDebug([]);
 
-    scanDir();
+    if (!scanDir())
+      return 1;
 
-    foreach(const string path, Schema s; all) {
-      if (!s.hasRef())
-        continue;
+    if (!seekAll(this.all))
+      return 1;
 
-      seek(s, s.getValue());
-    }
+    if(!writeOutput)
+      return 0;
 
     foreach(Schema s; all) {
       s.resolveDefs();
       writeOut(s);
     }
+
+    return 0;
+  }
+
+  private bool seekAll(ref Schema[string] all) {
+    string[] errors;
+
+    foreach(const string path, Schema s; all) {
+      if (!s.hasRef())
+        continue;
+
+      try {
+        seek(s, s.getValue());
+      } catch (ValidationException e) {
+        errors ~= e.msg;
+      }
+    }
+
+    if (errors.length == 0)
+      return true;
+
+    writefln("Error: validation failed for %d schema files.\n", errors.length);
+    foreach(const string e; errors)
+      writefln("%s\n", e);
+
+    return false;
   }
 
   private void writeOut(Schema s) {
     debug(deref) printDebug(["s": &s]);
-    
+
     const string outPath = buildPath(outDir, s.getLocalDir());
 
     if (baseName(outPath) == INCLUDES_DIR)
@@ -127,7 +158,7 @@ class Dereferencer {
    */
   void seekArray(Schema s, JSONValue* value) {
     debug(deref) printDebug(["s": &s, "value": value]);
-    
+
     foreach(ref JSONValue cur; value.array)
       seek(s, &cur);
   }
@@ -140,7 +171,7 @@ class Dereferencer {
     debug(deref) printDebug(["path": &path, "s": &s]);
 
     if(path[0] != '/')
-      throw new Exception(format(ERR_ILLEGAL_REF, path, s.getPath()));
+      throw new InvalidRefException(path, s.getPath());
 
     return localResolve(path, s);
   }
@@ -155,7 +186,7 @@ class Dereferencer {
     Schema* found = (normal in all);
 
     if (found is null) {
-      throw new Exception(format(ERR_OUT_OF_SCOPE, path, s.getPath()));
+      throw new NotFoundException(path, s.getPath());
     }
 
     return *found;
@@ -165,11 +196,26 @@ class Dereferencer {
    * Scan given directory for entries matching SCHEMA_FILTER
    * and pass them to processFile
    */
-  private void scanDir() {
+  private bool scanDir() {
     debug(deref) printDebug([]);
+    string[] errors;
 
-    foreach (string file; dirEntries(inDir, SCHEMA_FILTER, SpanMode.breadth))
-      processFile(file);
+    foreach (string file; dirEntries(inDir, SCHEMA_FILTER, SpanMode.breadth)) {
+      try {
+        processFile(file);
+      } catch (ValidationException e) {
+        errors ~= e.msg;
+      }
+    }
+
+    if (errors.length > 0) {
+      writefln("Error: %d files could not be read due to JSON syntax errors", errors.length);
+      foreach (const string e; errors) {
+        writeln(e);
+      }
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -180,14 +226,17 @@ class Dereferencer {
     debug(deref) printDebug(["path": &path]);
 
     const string body = readText(path);
+    const string shortPath = dirName(path[inDir.length..$]);
 
     try {
-      all[path] = new Schema(baseName(path), dirName(path[inDir.length + 1..$]), checkRefs(body), parseJSON(body));
+      all[path] = new Schema(baseName(path), shortPath, checkRefs(body), parseJSON(body));
     } catch(JSONException e) {
-      throw new Exception(format(ERR_JSON_PARSE, path), e);
+      throw new BadJsonException(shortPath, e);
     }
   }
 }
+
+
 
 private string defPath(const string next) {
   debug(deref) printDebug(["next": &next]);

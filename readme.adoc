@@ -5,12 +5,15 @@
 image:https://img.shields.io/github/release/EuPathDB-Infra/js-deref.svg?style=flat-square[GitHub tag,link=https://github.com/EuPathDB-Infra/js-deref/releases/latest]
 image:https://img.shields.io/travis/EuPathDB-Infra/js-deref/master.svg?style=flat-square[Travis (.org) branch,link=https://travis-ci.org/EuPathDB-Infra/js-deref]
 
-
 Recursively resolves `"$ref"` properties and appends the
 external schema content to the root `"definitions"` object.
 
-Reads entire directory trees and copies the input files to
-the output location.
+If an output directory is provided, the tool writes the
+dereferenced json files to the output directory, mirroring
+the structure of the input directory.
+
+If no output directory is provided, the tool simply performs
+the validation checks.
 
 WARNING: This utility is not presently suited for general
 use as a json schema ref resolver.  It is tailored to the
@@ -21,7 +24,7 @@ root of a java project's resource directory.
 
 [source, bash session]
 ----
-$ js-deref <input_dir> <output_dir>
+$ js-deref <input_dir> [output_dir]
 ----
 
 == Rule checks
