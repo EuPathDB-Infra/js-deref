@@ -15,9 +15,6 @@ private const string INCLUDES_DIR = "includes";
 
 private const string SCHEMA_FILTER = "*.json";
 
-private const string ERR_JSON_PARSE = `Failed to parse JSON file contents.
-    Schema File: %s`;
-
 class Dereferencer {
 
   private Schema[string] all;
@@ -231,7 +228,7 @@ class Dereferencer {
     try {
       all[path] = new Schema(baseName(path), shortPath, checkRefs(body), parseJSON(body));
     } catch(JSONException e) {
-      throw new BadJsonException(shortPath, e);
+      throw new BadJsonException(path[inDir.length..$], e);
     }
   }
 }
